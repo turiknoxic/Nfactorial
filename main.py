@@ -4,7 +4,7 @@ import copy
 from solver import solve_sudoku
 
 
-DIFFICULTY = {'EASY': 30, 'MEDIUM': 50, 'HARD': 70}
+DIFFICULTY = {'EASY': 50, 'MEDIUM': 55, 'HARD': 60}
 
 
 def choose_difficulty(level):
@@ -179,7 +179,6 @@ def main():
     clock = pygame.time.Clock()
     board = Sudoku(3)
     board.prepare_table()
-    board.delete_cells()
     board.set_view(50, 50, 50)
     print(board.board)
     game_on = False
@@ -194,6 +193,7 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 board.get_click(event.pos)
         if keys[pygame.K_SPACE] and game_on:
+            # при нажатии на пробел, показывается решение
             board.show_solution(screen)
         if not game_on:  # если игра еще не запущена
             text = "Выберите режим: 1 - легкий / 2 - средний / 3 - сложный"
@@ -203,15 +203,18 @@ def main():
                          SCREEN_HEIGHT // 2 - show_text.get_height() // 2))
             pygame.display.update()
         if keys[pygame.K_1]:  # выбираем легкий режим
-            # board.difficulty = choose_difficulty(1)
+            board.difficulty = choose_difficulty(1)
             game_on = True
         if keys[pygame.K_2]:  # выбираем средний режим
-            # board.difficulty = choose_difficulty(2)
+            board.difficulty = choose_difficulty(2)
             game_on = True
         if keys[pygame.K_3]:  # выбираем сложный режим
-            # board.difficulty = choose_difficulty(3)
+            board.difficulty = choose_difficulty(3)
             game_on = True
         if game_on:
+            if not cells_set:
+                board.delete_cells()
+                cells_set = True
             screen.fill((0, 0, 0))
             board.render(screen)
 
